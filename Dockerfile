@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:latest
+FROM ubuntu:18.04
 
 MAINTAINER <mediapipe@google.com>
 
@@ -48,16 +48,22 @@ RUN pip install future
 RUN pip3 install six
 
 # Install bazel
-ARG BAZEL_VERSION=1.1.0
+ARG BAZEL_VERSION=0.29.1
 RUN mkdir /bazel && \
     wget --no-check-certificate -O /bazel/installer.sh "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/b\
 azel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
-    wget --no-check-certificate -O  /bazel/LICENSE.txt "https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE" && \
+    wget --no-check-certificate -O  /bazel/LICENSE.txt "https://github.com/bazelbuild/bazel/blob/master/LICENSE" && \
     chmod +x /bazel/installer.sh && \
     /bazel/installer.sh  && \
     rm -f /bazel/installer.sh
 
 COPY . /mediapipe/
+
+# Setup Android SDK and NDK
+RUN bash /mediapipe/setup_android_sdk_and_ndk.sh
+
+# Setup OpenCV
+RUN bash /mediapipe/setup_opencv.sh
 
 # If we want the docker image to contain the pre-built object_detection_offline_demo binary, do the following
 # RUN bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/examples/desktop/demo:object_detection_tensorflow_demo
