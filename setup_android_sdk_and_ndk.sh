@@ -66,8 +66,12 @@ else
   curl https://dl.google.com/android/repository/sdk-tools-${platform}-4333796.zip -o /tmp/android_sdk/android_sdk.zip
   unzip /tmp/android_sdk/android_sdk.zip -d /tmp/android_sdk/
   mkdir -p $android_sdk_path
+  #export ANDROID_HOME $android_sdk_path
+  #cp /mediapipe/licenses
+  echo "Copying Licences"
+  cp -rv /mediapipe/licenses ${android_sdk_path}/licenses
   /tmp/android_sdk/tools/bin/sdkmanager --update
-  /tmp/android_sdk/tools/bin/sdkmanager "build-tools;29.0.1" "platform-tools" "platforms;android-29" --sdk_root=${android_sdk_path}
+  /mediapipe/android-accept-licenses.sh /tmp/android_sdk/tools/bin/sdkmanager "build-tools;29.0.1" "platform-tools" "platforms;android-29" --sdk_root=${android_sdk_path}
   rm -rf /tmp/android_sdk/
   echo "Android SDK is now installed. Consider setting \$ANDROID_HOME environment variable to be ${android_sdk_path}"
 fi

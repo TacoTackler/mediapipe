@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
         curl \
+        expect \
         git \
         wget \
         unzip \
@@ -48,7 +49,7 @@ RUN pip install future
 RUN pip3 install six
 
 # Install bazel
-ARG BAZEL_VERSION=0.29.1
+ARG BAZEL_VERSION=1.1.0
 RUN mkdir /bazel && \
     wget --no-check-certificate -O /bazel/installer.sh "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/b\
 azel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
@@ -60,10 +61,10 @@ azel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
 COPY . /mediapipe/
 
 # Setup Android SDK and NDK
-RUN bash /mediapipe/setup_android_sdk_and_ndk.sh
+RUN /mediapipe/setup_android_sdk_and_ndk.sh
 
 # Setup OpenCV
-RUN bash /mediapipe/setup_opencv.sh
+#RUN /mediapipe/setup_opencv.sh
 
 # If we want the docker image to contain the pre-built object_detection_offline_demo binary, do the following
 # RUN bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/examples/desktop/demo:object_detection_tensorflow_demo
